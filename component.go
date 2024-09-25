@@ -364,10 +364,7 @@ func (c *Components) UnmarshalBinary(b []byte) error {
 		}
 		c.Component = append(c.Component, comp)
 
-		if len(b[offset:]) == int(comp.Length)+2 {
-			break
-		}
-		b = b[offset+comp.MarshalLen()-2:]
+		b = b[offset+comp.MarshalLen():]
 	}
 	return nil
 }
@@ -386,6 +383,7 @@ func (c *Component) UnmarshalBinary(b []byte) error {
 	if len(b) < 2 {
 		return io.ErrUnexpectedEOF
 	}
+
 	c.Type = Tag(b[0])
 	c.Length = b[1]
 
@@ -579,9 +577,9 @@ func (c *Component) MarshalLen() int {
 			l += field.MarshalLen()
 		}
 	case ReturnResultLast, ReturnResultNotLast:
-		if field := c.ResultRetres; field != nil {
-			l += field.MarshalLen()
-		}
+		// if field := c.ResultRetres; field != nil {
+		// 	l += field.MarshalLen()
+		// }
 		if field := c.OperationCode; field != nil {
 			l += field.MarshalLen()
 		}
