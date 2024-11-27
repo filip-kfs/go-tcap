@@ -354,7 +354,7 @@ func (c *Components) UnmarshalBinary(b []byte) error {
 
 	var offset = 2
 	for {
-		if len(b) < 2 {
+		if len(b[offset:]) < 2 {
 			break
 		}
 
@@ -365,6 +365,9 @@ func (c *Components) UnmarshalBinary(b []byte) error {
 		c.Component = append(c.Component, comp)
 
 		b = b[offset+comp.MarshalLen():]
+		if len(b) < 2 {
+			break
+		}
 	}
 	return nil
 }
